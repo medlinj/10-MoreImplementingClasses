@@ -18,8 +18,8 @@ def main():
 
     run_test_simple_t()
     run_test_set_colors()
-    # run_test_move_by()
-    # run_test_clone()
+    run_test_move_by()
+    run_test_clone()
 
 
 def run_test_simple_t():
@@ -141,11 +141,12 @@ class CapitalT(object):
         #   Implement this method
         #   Note: you will need to also implement attach_to before testing
         # --------------------------------------------------------------
-
-        self.h_rect = rg.Rectangle(rg.Point(intersection_center.x - width / 2, intersection_center.y - letter_thickness / 2),
-                                   rg.Point(intersection_center.x + width / 2, intersection_center.y + letter_thickness / 2))
-        self.v_rect = rg.Rectangle(rg.Point(intersection_center.x - letter_thickness / 2, intersection_center.y - letter_thickness / 2),
-                                   rg.Point(intersection_center.x + letter_thickness / 2, intersection_center.y + height - letter_thickness / 2))
+        hcorner_1_x = rg.Point(intersection_center.x - width / 2, intersection_center.y - letter_thickness / 2)
+        hcorner_1_y = rg.Point(intersection_center.x + width / 2, intersection_center.y + letter_thickness / 2)
+        self.h_rect = rg.Rectangle(hcorner_1_x, hcorner_1_y)
+        vcorner_1_x = rg.Point(intersection_center.x - letter_thickness / 2, intersection_center.y - letter_thickness / 2)
+        vcorner_1_y = rg.Point(intersection_center.x + letter_thickness / 2, intersection_center.y + height - letter_thickness / 2)
+        self.v_rect = rg.Rectangle(vcorner_1_x, vcorner_1_y)
 
 
     def attach_to(self, window):
@@ -212,7 +213,6 @@ class CapitalT(object):
         self.v_rect.fill_color = fill_color
 
 
-
     def move_by(self, dx, dy):
         """
         What comes in:
@@ -236,7 +236,7 @@ class CapitalT(object):
           :type dy: int
         """
         # --------------------------------------------------------------
-        # TODO: 6.
+        # DONE: 6.
         #   READ the above specification, including the Example.
         #   Implement and test this method by uncommenting the appropriate
         #     run_test method in main. Compare the graphics window to
@@ -244,20 +244,18 @@ class CapitalT(object):
         #     that the T moves through, but there is only 1 T at any moment.
         # --------------------------------------------------------------
 
-        x_moved1 = self.v_rect.corner_1.x + dx
-        x_moved2 = self.v_rect.corner_2.x + dx
-        y_moved1 = self.v_rect.corner_1.y + dy
-        y_moved2 = self.v_rect.corner_2.y + dy
+        self.v_rect.corner_1.move_by(dx, dy)
+        self.v_rect.corner_2.x += dx
+        # self.v_rect.corner_1.y += dy
+        self.v_rect.corner_2.y += dy
 
-        x_moved1h = self.h_rect.corner_1.x + dx
-        x_moved2h = self.h_rect.corner_2.x + dx
-        y_moved1h = self.h_rect.corner_1.y + dy
-        y_moved2h = self.h_rect.corner_2.y + dy
+        self.h_rect.corner_1.x += dx
+        self.h_rect.corner_2.x += dx
+        self.h_rect.corner_1.y += dy
+        self.h_rect.corner_2.y += dy
 
-        self.v_rect = rg.Rectangle(rg.Point(x_moved1, y_moved1), rg.Point(x_moved2, y_moved2))
-        self.h_rect = rg.Rectangle(rg.Point(x_moved1h, y_moved1h), rg.Point(x_moved2h, y_moved2h))
 
-        
+
     def clone(self):
         """
         What comes in:
@@ -278,13 +276,15 @@ class CapitalT(object):
           :rtype: CapitalT
         """
         # --------------------------------------------------------------
-        # TODO: 7.
+        # DONE: 7.
         #   READ the above specification, including the Example.
         #   Implement and test this method by uncommenting the appropriate
         #     run_test method in main. Compare the graphics window to
         #     clone.pdf.
         # --------------------------------------------------------------
-
+        t = CapitalT(self.h_rect.get_center(), self.h_rect.get_width(), self.v_rect.get_height(), self.v_rect.get_width())
+        t.set_colors(self.h_rect.fill_color, self.v_rect.outline_color)
+        return t
 
 # ----------------------------------------------------------------------
 # If this module is running at the top level (as opposed to being
